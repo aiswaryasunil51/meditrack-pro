@@ -44,6 +44,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/drugs', drugRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/hospitals', hospitalRoutes);
+app.use('/api/shipments', shipmentRoutes);
 
 // 404 handler
 app.use((req, res) => {
