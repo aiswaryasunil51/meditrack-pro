@@ -5,6 +5,7 @@ import authRoutes from './routes/auth.js';
 import drugRoutes from './routes/drugs.js';
 import supplierRoutes from './routes/suppliers.js';
 import hospitalRoutes from './routes/hospitals.js';
+import shipmentRoutes from './routes/shipments.js';
 
 dotenv.config();
 

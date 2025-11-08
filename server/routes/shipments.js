@@ -1,19 +1,32 @@
-import express from 'express';
-import pool from '../config/database.js';
-import { authenticate } from '../middleware/auth.js';
+import express from "express";
+import pool from "../config/database.js";
 
 const router = express.Router();
 
-// 🟢 Mock data
-const shipments = [
-  { id: 1, orderId: 'ORD-001', drug: 'Paracetamol', supplier: 'MediLife', quantity: 500, status: 'delivered', date: '2025-11-01' },
-  { id: 2, orderId: 'ORD-002', drug: 'Amoxicillin', supplier: 'PharmaCorp', quantity: 300, status: 'in-transit', date: '2025-11-05' },
-  { id: 3, orderId: 'ORD-003', drug: 'Metformin', supplier: 'DiabeCare', quantity: 400, status: 'pending', date: '2025-11-07' }
-];
+// GET all shipments
+router.get("/", async (req, res) => {
+  try {
+    const [shipments] = await pool.query("SELECT * FROM shipments");
+    res.json(shipments);
+  } catch (err) {
+    console.error("❌ Error fetching shipments:", err.message);
+    res.status(500).json({ message: "Error fetching shipments" });
+  }
+});
 
-// 🚚 GET all shipments
-router.get('/', (req, res) => {
-  res.json(shipments);
+// POST new shipment
+router.post("/", async (req, res) => {
+  try {
+    const { orderId, drug, supplier, quantity, status, date } = req.body;
+    const [result] = await pool.query(
+      "INSERT INTO shipments (orderId, drug, supplier, quantity, status, date) VALUES (?, ?, ?, ?, ?, ?)",
+      [orderId, drug, supplier, quantity, status, date]
+    );
+    res.json({ success: true, id: result.insertId });
+  } catch (err) {
+    console.error("❌ Error adding shipment:", err.message);
+    res.status(500).json({ message: "Error adding shipment" });
+  }
 });
 
 export default router;
