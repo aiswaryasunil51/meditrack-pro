@@ -1,69 +1,58 @@
 import React, { useState, useEffect } from 'react';
-import { AlertCircle, Package, TruckIcon, Hospital, Users, BarChart3, LogOut, Plus, Edit2, Trash2, Search, Filter, Calendar, AlertTriangle, CheckCircle, XCircle, Eye, Download } from 'lucide-react';
+import {
+  AlertCircle, Package, TruckIcon, Hospital, Users, BarChart3,
+  LogOut, Plus, Edit2, Trash2, Search, Filter, Calendar,
+  AlertTriangle, CheckCircle, XCircle, Eye, Download
+} from 'lucide-react';
 
-// Mock API calls (replace with actual backend calls)
+// ✅ Define your backend base URL from environment variable
+const API_BASE = import.meta.env.VITE_API_URL || "https://meditrack-backend-aiswarya.vercel.app";
+
+// ✅ Base API URL from your .env file
 const api = {
+  // 🟢 Login endpoint
   login: async (username, password) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (username && password) {
-          resolve({ 
-            success: true, 
-            token: 'mock-jwt-token',
-            user: { id: 1, username, role: 'admin' }
-          });
-        } else {
-          resolve({ success: false, message: 'Invalid credentials' });
-        }
-      }, 500);
+    const res = await fetch(`${API_BASE}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
     });
+    return res.json();
   },
+
+  // 🟢 Register endpoint
   register: async (username, email, password, role) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
-        if (existingUsers.find(u => u.username === username)) {
-          resolve({ success: false, message: 'Username already exists' });
-        } else {
-          existingUsers.push({ username, email, role });
-          localStorage.setItem('users', JSON.stringify(existingUsers));
-          resolve({ success: true, message: 'Registration successful' });
-        }
-      }, 500);
+    const res = await fetch(`${API_BASE}/api/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, password, role }),
     });
+    return res.json();
   },
+
+  // 🟢 Fetch drugs
   getDrugs: async () => {
-    return [
-      { id: 1, name: 'Paracetamol', category: 'Analgesic', manufacturer: 'PharmaCorp', stock: 450, threshold: 200, expiry: '2026-10-15', status: 'good' },
-      { id: 2, name: 'Amoxicillin', category: 'Antibiotic', manufacturer: 'MediLife', stock: 180, threshold: 200, expiry: '2025-12-20', status: 'low' },
-      { id: 3, name: 'Ibuprofen', category: 'Analgesic', manufacturer: 'HealthGen', stock: 95, threshold: 150, expiry: '2025-11-30', status: 'critical' },
-      { id: 4, name: 'Metformin', category: 'Antidiabetic', manufacturer: 'DiabeCare', stock: 320, threshold: 100, expiry: '2026-06-10', status: 'good' },
-      { id: 5, name: 'Lisinopril', category: 'Antihypertensive', manufacturer: 'CardioMed', stock: 210, threshold: 150, expiry: '2026-03-25', status: 'good' }
-    ];
+    const res = await fetch(`${API_BASE}/api/drugs`);
+    return res.json();
   },
+
+  // 🟢 Fetch suppliers
   getSuppliers: async () => {
-    return [
-      { id: 1, name: 'MediLife Pvt Ltd', rating: 4.5, onTimeDelivery: 92, qualityScore: 96, pendingOrders: 3 },
-      { id: 2, name: 'PharmaCorp Suppliers', rating: 4.2, onTimeDelivery: 88, qualityScore: 94, pendingOrders: 5 },
-      { id: 3, name: 'HealthGen Industries', rating: 4.8, onTimeDelivery: 95, qualityScore: 98, pendingOrders: 1 },
-      { id: 4, name: 'DiabeCare Pharma', rating: 4.0, onTimeDelivery: 85, qualityScore: 90, pendingOrders: 4 }
-    ];
+    const res = await fetch(`${API_BASE}/api/suppliers`);
+    return res.json();
   },
+
+  // 🟢 Fetch hospitals
   getHospitals: async () => {
-    return [
-      { id: 1, name: 'Apollo Hospital', location: 'Delhi', consumption: 1250, orders: 28 },
-      { id: 2, name: 'Max Healthcare', location: 'Mumbai', consumption: 980, orders: 22 },
-      { id: 3, name: 'Fortis Hospital', location: 'Bangalore', consumption: 1100, orders: 25 },
-      { id: 4, name: 'AIIMS', location: 'Delhi', consumption: 1450, orders: 32 }
-    ];
+    const res = await fetch(`${API_BASE}/api/hospitals`);
+    return res.json();
   },
+
+  // 🟢 Fetch shipments
   getShipments: async () => {
-    return [
-      { id: 1, orderId: 'ORD-001', drug: 'Paracetamol', supplier: 'MediLife', quantity: 500, status: 'delivered', date: '2025-11-01' },
-      { id: 2, orderId: 'ORD-002', drug: 'Amoxicillin', supplier: 'PharmaCorp', quantity: 300, status: 'in-transit', date: '2025-11-05' },
-      { id: 3, orderId: 'ORD-003', drug: 'Metformin', supplier: 'DiabeCare', quantity: 400, status: 'pending', date: '2025-11-07' }
-    ];
-  }
+    const res = await fetch(`${API_BASE}/api/shipments`);
+    return res.json();
+  },
 };
 
 const App = () => {
