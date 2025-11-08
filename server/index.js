@@ -1,4 +1,4 @@
-imimport express from 'express';
+import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
@@ -17,8 +17,8 @@ app.use(cors({
     'http://localhost:3000',
     'http://localhost:5173',
     'https://meditrack-frontend-aiswarya1.vercel.app', // deployed frontend
-    'https://meditrack-frontend-aiswarya1.vercel.app/' // trailing slash safety
-    process.env.CLIENT_URL
+    'https://meditrack-frontend-aiswarya1.vercel.app/', // trailing slash safety
+    process.env.CLIENT_URL,
   ].filter(Boolean),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
