@@ -1,4 +1,7 @@
 import express from 'express';
+import pool from '../config/database.js';
+import { authenticate } from '../middleware/auth.js';
+
 const router = express.Router();
 
 // 🟢 Mock data (replace later with DB queries)

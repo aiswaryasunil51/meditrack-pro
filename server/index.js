@@ -18,7 +18,7 @@ app.use(cors({
     'http://localhost:5173',
     'https://meditrack-frontend-aiswarya1.vercel.app', // deployed frontend
     'https://meditrack-frontend-aiswarya1.vercel.app/', // trailing slash safety
-    process.env.CLIENT_URL,
+    process.env.CLIENT_URL
   ].filter(Boolean),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
